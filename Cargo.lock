@@ -411,6 +411,7 @@ dependencies = [
  "tracing-appender",
  "tracing-log",
  "tracing-subscriber",
+ "url",
  "utf7-imap",
  "uuid",
  "webpki-roots",

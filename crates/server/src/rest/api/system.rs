@@ -122,6 +122,18 @@ impl SystemApi {
         context.require_permission(None, Permission::ROOT)?;
         Ok(Proxy::update(id.0, url.0)?)
     }
+
+    /// Test whether a proxy can reach a geo lookup service. Requires root permission.
+    #[oai(path = "/proxy/:id/test", method = "post", operation_id = "test_proxy")]
+    async fn test_proxy(
+        &self,
+        id: Path<u64>,
+        context: WrappedContext,
+    ) -> ApiResult<Json<bichon_core::settings::proxy::ProxyTestResult>> {
+        context.require_permission(None, Permission::ROOT)?;
+        Ok(Json(Proxy::test(id.0).await?))
+    }
+
     /// Get system configurations.
     ///
     /// Returns a read-only snapshot of the server configuration

@@ -39,6 +39,7 @@ utf7-imap.workspace = true
 mail-parser.workspace = true
 tokio-rustls.workspace = true
 oauth2.workspace = true
+url.workspace = true
 sysinfo.workspace = true
 num_cpus.workspace = true
 rand.workspace = true

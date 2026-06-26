@@ -20,6 +20,7 @@ use crate::error::code::ErrorCode;
 use crate::error::BichonResult;
 use crate::oauth2::{entity::OAuth2, pending::OAuth2PendingEntity, token::OAuth2AccessToken};
 use crate::settings::proxy::Proxy;
+use crate::utils::net::normalize_proxy_url;
 use crate::{decrypt, encrypt, raise_error};
 use oauth2::{
     basic::BasicClient, AuthUrl, AuthorizationCode, ClientId, ClientSecret, CsrfToken,
@@ -265,14 +266,12 @@ impl OAuth2Flow {
 fn build_http_client(use_proxy: Option<u64>) -> BichonResult<reqwest::Client> {
     if let Some(proxy_id) = use_proxy {
         let proxy = Proxy::get(proxy_id)?;
+        let proxy_url = normalize_proxy_url(&proxy.url)?;
         return oauth2::reqwest::ClientBuilder::new()
             .redirect(oauth2::reqwest::redirect::Policy::none())
-            .proxy(reqwest::Proxy::all(&proxy.url).map_err(|e| {
+            .proxy(reqwest::Proxy::all(&proxy_url).map_err(|e| {
                 raise_error!(
-                    format!(
-                        "Failed to configure SOCKS5 proxy ({}): {:#?}. Please check",
-                        &proxy.url, e
-                    ),
+                    format!("Failed to configure proxy: {:#?}. Please check", e),
                     ErrorCode::InternalError
                 )
             })?)

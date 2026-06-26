@@ -19,8 +19,14 @@
 
 import { ColumnDef } from '@tanstack/react-table'
 import LongText from '@/components/long-text'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 import { DataTableColumnHeader } from './data-table-column-header'
 import { DataTableRowActions } from './data-table-row-actions'
+import { formatProxyDisplayUrl } from '../utils'
 import { format } from 'date-fns'
 import { Proxy } from '@/api/system/api'
 
@@ -32,10 +38,10 @@ export const getColumns = (t: (key: string) => string): ColumnDef<Proxy>[] => [
       <DataTableColumnHeader column={column} title={t('settings.id')} />
     ),
     cell: ({ row }) => (
-      <LongText className='max-w-72'>{`${row.original.id}`}</LongText>
+      <span className='whitespace-nowrap tabular-nums'>{row.original.id}</span>
     ),
     enableHiding: false,
-    meta: { className: 'w-60' },
+    meta: { className: 'w-0 whitespace-nowrap' },
     enableSorting: false
   },
   {
@@ -44,9 +50,20 @@ export const getColumns = (t: (key: string) => string): ColumnDef<Proxy>[] => [
       <DataTableColumnHeader column={column} title={t('settings.url')} />
     ),
     cell: ({ row }) => {
-      return <LongText>{row.original.url}</LongText>
+      const url = row.original.url
+      const display = formatProxyDisplayUrl(url)
+      return (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <div className='min-w-0 truncate text-sm'>{display}</div>
+          </TooltipTrigger>
+          <TooltipContent side='top' className='max-w-[32rem] break-all'>
+            {url}
+          </TooltipContent>
+        </Tooltip>
+      )
     },
-    meta: { className: 'w-60' },
+    meta: { className: 'min-w-0 w-full' },
   },
   {
     accessorKey: 'created_at',
@@ -59,6 +76,7 @@ export const getColumns = (t: (key: string) => string): ColumnDef<Proxy>[] => [
       return <LongText>{date}</LongText>;
     },
     enableHiding: false,
+    meta: { className: 'w-44 whitespace-nowrap' },
   },
   {
     accessorKey: 'updated_at',
@@ -71,9 +89,11 @@ export const getColumns = (t: (key: string) => string): ColumnDef<Proxy>[] => [
       return <LongText>{date}</LongText>;
     },
     enableHiding: false,
+    meta: { className: 'w-44 whitespace-nowrap' },
   },
   {
     id: 'actions',
     cell: DataTableRowActions,
+    meta: { className: 'w-16' },
   },
 ]

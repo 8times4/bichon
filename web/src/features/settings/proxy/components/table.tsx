@@ -44,6 +44,8 @@ import {
 import { DataTablePagination } from './data-table-pagination'
 import { DataTableToolbar } from './data-table-toolbar'
 import { useTranslation } from 'react-i18next'
+import { cn } from '@/lib/utils'
+import { TooltipProvider } from '@/components/ui/tooltip'
 import { Proxy } from '@/api/system/api'
 
 
@@ -98,8 +100,16 @@ export function ProxyTable({ columns, data }: DataTableProps) {
   return (
     <div className='space-y-4'>
       <DataTableToolbar table={table} />
-      <div className='rounded-md border'>
-        <Table>
+      <div className='rounded-md border overflow-x-auto'>
+        <TooltipProvider delayDuration={300}>
+          <Table className='w-full'>
+            <colgroup>
+              <col />
+              <col className='w-full' />
+              <col className='w-44' />
+              <col className='w-44' />
+              <col className='w-16' />
+            </colgroup>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id} className='group/row'>
@@ -108,7 +118,10 @@ export function ProxyTable({ columns, data }: DataTableProps) {
                     <TableHead
                       key={header.id}
                       colSpan={header.colSpan}
-                      className={header.column.columnDef.meta?.className ?? ''}
+                      className={cn(
+                        header.column.id === 'url' && 'max-w-0',
+                        header.column.columnDef.meta?.className
+                      )}
                     >
                       {header.isPlaceholder
                         ? null
@@ -133,7 +146,10 @@ export function ProxyTable({ columns, data }: DataTableProps) {
                   {row.getVisibleCells().map((cell) => (
                     <TableCell
                       key={cell.id}
-                      className={cell.column.columnDef.meta?.className ?? ''}
+                      className={cn(
+                        cell.column.id === 'url' && 'max-w-0',
+                        cell.column.columnDef.meta?.className
+                      )}
                     >
                       {flexRender(
                         cell.column.columnDef.cell,
@@ -154,7 +170,8 @@ export function ProxyTable({ columns, data }: DataTableProps) {
               </TableRow>
             )}
           </TableBody>
-        </Table>
+          </Table>
+        </TooltipProvider>
       </div>
       {data.length > 10 && <DataTablePagination table={table} />}
     </div>

@@ -1311,6 +1311,10 @@
       }
     },
     "proxy": "Proxy",
+    "proxyTest": "Check Proxy",
+    "proxyTesting": "Checking…",
+    "proxyTestSuccess": "Proxy works",
+    "proxyTestFailed": "Proxy test failed",
     "proxyUpdateOrAddFailed": "{{action}} failed, please try again later",
     "reset": "Reset",
     "resetRootPassword": "Reset Root Password",

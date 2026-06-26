@@ -105,9 +105,8 @@ export function ProxyDeleteDialog({ open, onOpenChange, currentRow }: Props) {
           <Label className='my-2'>
             {t('proxyDelete.proxyIdLabel')}
             <Input
-              type="number"
               value={`${value}`}
-              onChange={(e) => setValue(parseInt(e.target.value, 10))}
+              onChange={(e) => setValue(Number(e.target.value))}
               placeholder={t('proxyDelete.proxyIdPlaceholder')}
               className="mt-2"
             />
@@ -126,4 +125,3 @@ export function ProxyDeleteDialog({ open, onOpenChange, currentRow }: Props) {
     />
   )
 }
-
